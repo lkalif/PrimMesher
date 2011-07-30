@@ -1261,6 +1261,15 @@ namespace PrimMesher
 
         public void Create(PathType pathType, int steps)
         {
+            if (this.taperX > 0.999f)
+                this.taperX = 0.999f;
+            if (this.taperX < -0.999f)
+                this.taperX = -0.999f;
+            if (this.taperY > 0.999f)
+                this.taperY = 0.999f;
+            if (this.taperY < -0.999f)
+                this.taperY = -0.999f;
+
             if (pathType == PathType.Linear || pathType == PathType.Flexible)
             {
                 int step = 0;
@@ -1835,7 +1844,8 @@ namespace PrimMesher
                 // fill faces between layers
 
                 int numVerts = newLayer.coords.Count;
-                Face newFace = new Face();
+                Face newFace1 = new Face();
+                Face newFace2 = new Face();
 
                 if (nodeIndex > 0)
                 {
@@ -1853,14 +1863,23 @@ namespace PrimMesher
 
                         int whichVert = i - startVert;
 
-                        newFace.v1 = i;
-                        newFace.v2 = i - numVerts;
-                        newFace.v3 = iNext - numVerts;
-                        this.faces.Add(newFace);
+                        newFace1.v1 = i;
+                        newFace1.v2 = i - numVerts;
+                        newFace1.v3 = iNext;
 
-                        newFace.v2 = iNext - numVerts;
-                        newFace.v3 = iNext;
-                        this.faces.Add(newFace);
+                        newFace1.n1 = newFace1.v1;
+                        newFace1.n2 = newFace1.v2;
+                        newFace1.n3 = newFace1.v3;
+                        this.faces.Add(newFace1);
+
+                        newFace2.v1 = iNext;
+                        newFace2.v2 = i - numVerts;
+                        newFace2.v3 = iNext - numVerts;
+
+                        newFace2.n1 = newFace2.v1;
+                        newFace2.n2 = newFace2.v2;
+                        newFace2.n3 = newFace2.v3;
+                        this.faces.Add(newFace2);
 
                         if (this.viewerMode)
                         {
@@ -1910,31 +1929,31 @@ namespace PrimMesher
 
                             newViewerFace1.uv1.V = 1.0f - node.percentOfPath;
                             newViewerFace1.uv2.V = lastV;
-                            newViewerFace1.uv3.V = lastV;
+                            newViewerFace1.uv3.V = 1.0f - node.percentOfPath;
 
-                            newViewerFace2.uv1.U = u1;
-                            newViewerFace2.uv2.U = u2;
+                            newViewerFace2.uv1.U = u2;
+                            newViewerFace2.uv2.U = u1;
                             newViewerFace2.uv3.U = u2;
 
                             newViewerFace2.uv1.V = 1.0f - node.percentOfPath;
                             newViewerFace2.uv2.V = lastV;
-                            newViewerFace2.uv3.V = 1.0f - node.percentOfPath;
+                            newViewerFace2.uv3.V = lastV;
 
-                            newViewerFace1.v1 = this.coords[i];
-                            newViewerFace1.v2 = this.coords[i - numVerts];
-                            newViewerFace1.v3 = this.coords[iNext - numVerts];
+                            newViewerFace1.v1 = this.coords[newFace1.v1];
+                            newViewerFace1.v2 = this.coords[newFace1.v2];
+                            newViewerFace1.v3 = this.coords[newFace1.v3];
 
-                            newViewerFace2.v1 = this.coords[i];
-                            newViewerFace2.v2 = this.coords[iNext - numVerts];
-                            newViewerFace2.v3 = this.coords[iNext];
+                            newViewerFace2.v1 = this.coords[newFace2.v1];
+                            newViewerFace2.v2 = this.coords[newFace2.v2];
+                            newViewerFace2.v3 = this.coords[newFace2.v3];
 
-                            newViewerFace1.coordIndex1 = i;
-                            newViewerFace1.coordIndex2 = i - numVerts;
-                            newViewerFace1.coordIndex3 = iNext - numVerts;
+                            newViewerFace1.coordIndex1 = newFace1.v1;
+                            newViewerFace1.coordIndex2 = newFace1.v2;
+                            newViewerFace1.coordIndex3 = newFace1.v3;
 
-                            newViewerFace2.coordIndex1 = i;
-                            newViewerFace2.coordIndex2 = iNext - numVerts;
-                            newViewerFace2.coordIndex3 = iNext;
+                            newViewerFace2.coordIndex1 = newFace2.v1;
+                            newViewerFace2.coordIndex2 = newFace2.v2;
+                            newViewerFace2.coordIndex3 = newFace2.v3;
 
                             // profile cut faces
                             if (whichVert == cut1Vert)
@@ -1948,9 +1967,11 @@ namespace PrimMesher
                             else if (whichVert == cut2Vert)
                             {
                                 newViewerFace1.n1 = newLayer.cutNormal2;
-                                newViewerFace1.n2 = newViewerFace1.n3 = lastCutNormal2;
+                                newViewerFace1.n2 = lastCutNormal2; 
+                                newViewerFace1.n3 = lastCutNormal2;
 
-                                newViewerFace2.n1 = newViewerFace2.n3 = newLayer.cutNormal2;
+                                newViewerFace2.n1 = newLayer.cutNormal2;
+                                newViewerFace2.n3 = newLayer.cutNormal2;
                                 newViewerFace2.n2 = lastCutNormal2;
                             }
 
@@ -1963,13 +1984,13 @@ namespace PrimMesher
                                 }
                                 else
                                 {
-                                    newViewerFace1.n1 = this.normals[i];
-                                    newViewerFace1.n2 = this.normals[i - numVerts];
-                                    newViewerFace1.n3 = this.normals[iNext - numVerts];
+                                    newViewerFace1.n1 = this.normals[newFace1.n1];
+                                    newViewerFace1.n2 = this.normals[newFace1.n2];
+                                    newViewerFace1.n3 = this.normals[newFace1.n3];
 
-                                    newViewerFace2.n1 = this.normals[i];
-                                    newViewerFace2.n2 = this.normals[iNext - numVerts];
-                                    newViewerFace2.n3 = this.normals[iNext];
+                                    newViewerFace2.n1 = this.normals[newFace2.n1];
+                                    newViewerFace2.n2 = this.normals[newFace2.n2];
+                                    newViewerFace2.n3 = this.normals[newFace2.n3];
                                 }
                             }
 
