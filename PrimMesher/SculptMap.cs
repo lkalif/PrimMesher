@@ -62,6 +62,8 @@ namespace PrimMesher
 
             bool needsScaling = false;
 
+            bool smallMap = bmW * bmH <= lod * lod;
+
             width = bmW;
             height = bmH;
             while (width * height > numLodPixels)
@@ -91,7 +93,7 @@ namespace PrimMesher
                 height >>= 1;
             }
 
-            int numBytes = (width + 1) * (height + 1);
+            int numBytes = smallMap ? width * height : (width + 1) * (height + 1);
             redBytes = new byte[numBytes];
             greenBytes = new byte[numBytes];
             blueBytes = new byte[numBytes];
@@ -100,29 +102,46 @@ namespace PrimMesher
 
             try
             {
-                for (int y = 0; y <= height; y++)
-                {
-                    for (int x = 0; x <= width; x++)
+                if (smallMap)
+                    for (int y = 0; y < height; y++)
                     {
-                        int bmY = y < height ? y * 2 : y * 2 - 1;
-                        int bmX = x < width ? x * 2 : x * 2 - 1;
-                        Color c = bm.GetPixel(bmX, bmY);
+                        for (int x = 0; x < width; x++)
+                        {
+                            Color c = bm.GetPixel(x, y);
 
-                        redBytes[byteNdx] = c.R;
-                        greenBytes[byteNdx] = c.G;
-                        blueBytes[byteNdx] = c.B;
+                            redBytes[byteNdx] = c.R;
+                            greenBytes[byteNdx] = c.G;
+                            blueBytes[byteNdx] = c.B;
 
-                        ++byteNdx;
+                            ++byteNdx;
+                        }
                     }
-                }
+                else
+                    for (int y = 0; y <= height; y++)
+                    {
+                        for (int x = 0; x <= width; x++)
+                        {
+                            Color c = bm.GetPixel(x < width ? x * 2 : x * 2 - 1,
+                                                y < height ? y * 2 : y * 2 - 1);
+
+                            redBytes[byteNdx] = c.R;
+                            greenBytes[byteNdx] = c.G;
+                            blueBytes[byteNdx] = c.B;
+
+                            ++byteNdx;
+                        }
+                    }
             }
             catch (Exception e)
             {
                 throw new Exception("Caught exception processing byte arrays in SculptMap(): e: " + e.ToString());
             }
 
-            width++;
-            height++;
+            if (!smallMap)
+            {
+                width++;
+                height++;
+            }
         }
 
         public List<List<Coord>> ToRows(bool mirror)
