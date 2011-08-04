@@ -682,8 +682,8 @@ namespace PrimMesher
             float yScale = 0.5f;
             if (sides == 4)  // corners of a square are sqrt(2) from center
             {
-                xScale = 0.707f;
-                yScale = 0.707f;
+                xScale = 0.707107f;
+                yScale = 0.707107f;
             }
 
             float startAngle = profileStart * twoPi;
