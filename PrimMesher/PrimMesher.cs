@@ -1609,7 +1609,6 @@ namespace PrimMesher
             if (sphereMode)
                 this.hasProfileCut = this.profileEnd - this.profileStart < 0.4999f;
             else
-                //this.hasProfileCut = (this.profileStart > 0.0f || this.profileEnd < 1.0f);
                 this.hasProfileCut = this.profileEnd - this.profileStart < 0.9999f;
             this.hasHollow = (this.hollow > 0.001f);
 
@@ -1888,13 +1887,12 @@ namespace PrimMesher
                                     u1 -= (int)u1;
                                     if (u2 < 0.1f)
                                         u2 = 1.0f;
-                                    //this.profileOuterFaceNumber = primFaceNum;
                                 }
-                                else if (whichVert > profile.coords.Count - profile.numHollowVerts - 1)
-                                {
-                                    u1 *= 2.0f;
-                                    u2 *= 2.0f;
-                                }
+                                //else if (whichVert > profile.coords.Count - profile.numHollowVerts - 1)
+                                //{
+                                //    u1 *= 2.0f;
+                                //    u2 *= 2.0f;
+                                //}
                             }
 
                             newViewerFace1.uv1.U = u1;
