@@ -750,7 +750,10 @@ namespace PrimMesher
                         else
                             hollowNormals.Add(new Coord(-angle.X, -angle.Y, 0.0f));
 
-                        hollowUs.Add(angle.angle * hollow);
+                        if (hollowSides == 4)
+                            hollowUs.Add(angle.angle * hollow * 0.707107f);
+                        else
+                            hollowUs.Add(angle.angle * hollow);
                     }
                 }
             }
@@ -1888,10 +1891,13 @@ namespace PrimMesher
                                     if (u2 < 0.1f)
                                         u2 = 1.0f;
                                 }
-                                //else if (whichVert > profile.coords.Count - profile.numHollowVerts - 1)
+                                //else if (whichVert > profile.coords.Count - profile.numHollowVerts - 1) // hollow
                                 //{
-                                //    u1 *= 2.0f;
-                                //    u2 *= 2.0f;
+                                //    if (sides == 3) // tweak hollow Us for prisms
+                                //    {
+                                //        //u1 *= 2.0f;
+                                //        //u2 *= 2.0f;
+                                //    }
                                 //}
                             }
 
