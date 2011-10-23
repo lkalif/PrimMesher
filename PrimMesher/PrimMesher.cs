@@ -236,6 +236,13 @@ namespace PrimMesher
             this.U = u;
             this.V = v;
         }
+
+        public UVCoord Flip()
+        {
+            this.U = 1.0f - this.U;
+            this.V = 1.0f - this.V;
+            return this;
+        }
     }
 
     public struct Face
@@ -2011,8 +2018,11 @@ namespace PrimMesher
                         newViewerFace.n3 = faceNormal;
 
                         newViewerFace.uv1 = newLayer.faceUVs[face.v1 - coordsLen];
+                        newViewerFace.uv1.Flip();
                         newViewerFace.uv2 = newLayer.faceUVs[face.v2 - coordsLen];
+                        newViewerFace.uv2.Flip();
                         newViewerFace.uv3 = newLayer.faceUVs[face.v3 - coordsLen];
+                        newViewerFace.uv3.Flip();
 
                         this.viewerFaces.Add(newViewerFace);
                     }
