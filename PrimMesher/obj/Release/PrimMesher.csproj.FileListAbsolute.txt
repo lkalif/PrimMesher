@@ -14,3 +14,8 @@ D:\PrimMesher\trunk\PrimMesher\bin\Release\PrimMesher.pdb
 D:\PrimMesher\trunk\PrimMesher\obj\Release\ResolveAssemblyReference.cache
 D:\PrimMesher\trunk\PrimMesher\obj\Release\PrimMesher.dll
 D:\PrimMesher\trunk\PrimMesher\obj\Release\PrimMesher.pdb
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\bin\Release\PrimMesher.dll
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\bin\Release\PrimMesher.pdb
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\obj\Release\ResolveAssemblyReference.cache
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\obj\Release\PrimMesher.dll
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\obj\Release\PrimMesher.pdb

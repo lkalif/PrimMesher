@@ -1034,7 +1034,7 @@ namespace PrimMesher
         {
             this.faceUVs = new List<UVCoord>();
             foreach (Coord c in this.coords)
-                this.faceUVs.Add(new UVCoord(0.5f + c.X, 0.5f - c.Y));
+                this.faceUVs.Add(new UVCoord(1.0f - (0.5f + c.X), 1.0f - (0.5f - c.Y)));
         }
 
         internal Profile Copy()
@@ -1804,6 +1804,13 @@ namespace PrimMesher
                             newViewerFace.uv2 = newLayer.faceUVs[face.v2];
                             newViewerFace.uv3 = newLayer.faceUVs[face.v3];
 
+                            if (!sphereMode)
+                            {
+                                newViewerFace.uv1.Flip();
+                                newViewerFace.uv2.Flip();
+                                newViewerFace.uv3.Flip();
+                            }
+
                             this.viewerFaces.Add(newViewerFace);
                         }
                     }
@@ -2017,12 +2024,16 @@ namespace PrimMesher
                         newViewerFace.n2 = faceNormal;
                         newViewerFace.n3 = faceNormal;
 
-                        newViewerFace.uv1 = newLayer.faceUVs[face.v1 - coordsLen];
-                        newViewerFace.uv1.Flip();
-                        newViewerFace.uv2 = newLayer.faceUVs[face.v2 - coordsLen];
-                        newViewerFace.uv2.Flip();
+                        newViewerFace.uv1 = newLayer.faceUVs[face.v1 - coordsLen]; 
+                        newViewerFace.uv2 = newLayer.faceUVs[face.v2 - coordsLen]; 
                         newViewerFace.uv3 = newLayer.faceUVs[face.v3 - coordsLen];
-                        newViewerFace.uv3.Flip();
+
+                        if (!sphereMode)
+                        {
+                            newViewerFace.uv1.Flip();
+                            newViewerFace.uv2.Flip();
+                            newViewerFace.uv3.Flip();
+                        }
 
                         this.viewerFaces.Add(newViewerFace);
                     }

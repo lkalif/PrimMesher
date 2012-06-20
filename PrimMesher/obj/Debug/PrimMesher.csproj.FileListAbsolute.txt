@@ -8,3 +8,8 @@ D:\PrimMesher\trunk\PrimMesher\bin\Debug\PrimMesher.pdb
 D:\PrimMesher\trunk\PrimMesher\obj\Debug\ResolveAssemblyReference.cache
 D:\PrimMesher\trunk\PrimMesher\obj\Debug\PrimMesher.dll
 D:\PrimMesher\trunk\PrimMesher\obj\Debug\PrimMesher.pdb
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\bin\Debug\PrimMesher.dll
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\bin\Debug\PrimMesher.pdb
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\obj\Debug\PrimMesher.dll
+C:\Users\t\d\PrimMesher\trunk\PrimMesher\obj\Debug\PrimMesher.pdb
