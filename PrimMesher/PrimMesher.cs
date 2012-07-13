@@ -1616,7 +1616,7 @@ namespace PrimMesher
                     steps = (int)(steps * 4.5 * length);
             }
 
-            if (sphereMode)
+            if (this.sphereMode)
                 this.hasProfileCut = this.profileEnd - this.profileStart < 0.4999f;
             else
                 this.hasProfileCut = this.profileEnd - this.profileStart < 0.9999f;
@@ -1742,7 +1742,8 @@ namespace PrimMesher
 
             Coord lastCutNormal1 = new Coord();
             Coord lastCutNormal2 = new Coord();
-            float lastV = 1.0f;
+            float thisV = 0.0f;
+            float lastV = 0.0f;
 
             Path path = new Path();
             path.twistBegin = twistBegin;
@@ -1804,7 +1805,7 @@ namespace PrimMesher
                             newViewerFace.uv2 = newLayer.faceUVs[face.v2];
                             newViewerFace.uv3 = newLayer.faceUVs[face.v3];
 
-                            if (!sphereMode)
+                            if (pathType == PathType.Linear)
                             {
                                 newViewerFace.uv1.Flip();
                                 newViewerFace.uv2.Flip();
@@ -1837,6 +1838,8 @@ namespace PrimMesher
                 int numVerts = newLayer.coords.Count;
                 Face newFace1 = new Face();
                 Face newFace2 = new Face();
+
+                thisV = 1.0f - node.percentOfPath;
 
                 if (nodeIndex > 0)
                 {
@@ -1883,10 +1886,16 @@ namespace PrimMesher
                             ViewerFace newViewerFace1 = new ViewerFace(primFaceNum);
                             ViewerFace newViewerFace2 = new ViewerFace(primFaceNum);
 
-                            float u1 = newLayer.us[whichVert];
+                            int uIndex = whichVert;
+                            if (!hasHollow && sides > 4 && uIndex < newLayer.us.Count - 1)
+                            {
+                                uIndex++;
+                            }
+
+                            float u1 = newLayer.us[uIndex];
                             float u2 = 1.0f;
-                            if (whichVert < newLayer.us.Count - 1)
-                                u2 = newLayer.us[whichVert + 1];
+                            if (uIndex < (int)newLayer.us.Count - 1)
+                                u2 = newLayer.us[uIndex + 1];
 
                             if (whichVert == cut1Vert || whichVert == cut2Vert)
                             {
@@ -1905,29 +1914,37 @@ namespace PrimMesher
                                     if (u2 < 0.1f)
                                         u2 = 1.0f;
                                 }
-                                //else if (whichVert > profile.coords.Count - profile.numHollowVerts - 1) // hollow
-                                //{
-                                //    if (sides == 3) // tweak hollow Us for prisms
-                                //    {
-                                //        //u1 *= 2.0f;
-                                //        //u2 *= 2.0f;
-                                //    }
-                                //}
+                            }
+
+                            if (this.sphereMode)
+                            {
+                                if (whichVert != cut1Vert && whichVert != cut2Vert)
+                                {
+                                    u1 = u1 * 2.0f - 1.0f;
+                                    u2 = u2 * 2.0f - 1.0f;
+
+                                    if (whichVert >= newLayer.numOuterVerts)
+                                    {
+                                        u1 -= hollow;
+                                        u2 -= hollow;
+                                    }
+
+                                }
                             }
 
                             newViewerFace1.uv1.U = u1;
                             newViewerFace1.uv2.U = u1;
                             newViewerFace1.uv3.U = u2;
 
-                            newViewerFace1.uv1.V = 1.0f - node.percentOfPath;
+                            newViewerFace1.uv1.V = thisV;
                             newViewerFace1.uv2.V = lastV;
-                            newViewerFace1.uv3.V = 1.0f - node.percentOfPath;
+                            newViewerFace1.uv3.V = thisV;
 
                             newViewerFace2.uv1.U = u2;
                             newViewerFace2.uv2.U = u1;
                             newViewerFace2.uv3.U = u2;
 
-                            newViewerFace2.uv1.V = 1.0f - node.percentOfPath;
+                            newViewerFace2.uv1.V = thisV;
                             newViewerFace2.uv2.V = lastV;
                             newViewerFace2.uv3.V = lastV;
 
@@ -1999,7 +2016,7 @@ namespace PrimMesher
 
                 lastCutNormal1 = newLayer.cutNormal1;
                 lastCutNormal2 = newLayer.cutNormal2;
-                lastV = 1.0f - node.percentOfPath;
+                lastV = thisV;
 
                 if (needEndFaces && nodeIndex == path.pathNodes.Count - 1 && viewerMode)
                 {
@@ -2028,7 +2045,7 @@ namespace PrimMesher
                         newViewerFace.uv2 = newLayer.faceUVs[face.v2 - coordsLen];
                         newViewerFace.uv3 = newLayer.faceUVs[face.v3 - coordsLen];
 
-                        if (!sphereMode)
+                        if (pathType == PathType.Linear)
                         {
                             newViewerFace.uv1.Flip();
                             newViewerFace.uv2.Flip();
