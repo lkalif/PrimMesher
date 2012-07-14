@@ -1283,11 +1283,11 @@ namespace PrimMesher
                 float start = -0.5f;
                 float stepSize = length / (float)steps;
                 float percentOfPathMultiplier = stepSize * 0.999999f;
-                float xOffset = 0.0f;
-                float yOffset = 0.0f;
+                float xOffset = this.topShearX * this.pathCutBegin;
+                float yOffset = this.topShearY * this.pathCutBegin;
                 float zOffset = start;
-                float xOffsetStepIncrement = this.topShearX / steps;
-                float yOffsetStepIncrement = this.topShearY / steps;
+                float xOffsetStepIncrement = this.topShearX * length / steps;
+                float yOffsetStepIncrement = this.topShearY * length / steps;
 
                 float percentOfPath = this.pathCutBegin;
                 zOffset += percentOfPath;
