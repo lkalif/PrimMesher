@@ -1282,7 +1282,7 @@ namespace PrimMesher
 
                 float start = -0.5f;
                 float stepSize = length / (float)steps;
-                float percentOfPathMultiplier = stepSize;
+                float percentOfPathMultiplier = stepSize * 0.999999f;
                 float xOffset = 0.0f;
                 float yOffset = 0.0f;
                 float zOffset = start;
