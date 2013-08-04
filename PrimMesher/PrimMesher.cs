@@ -1000,7 +1000,10 @@ namespace PrimMesher
                 for (int i = 0; i < this.numOuterVerts - 1; i++)
                     this.faceNumbers.Add(sides < 5 && i <= sides ? faceNum++ : faceNum);
 
-                this.faceNumbers.Add(hasProfileCut ? -1 : faceNum++);
+                if (hasProfileCut)
+                {
+                    this.faceNumbers.Add(-1);
+                }
 
                 if (sides > 4 && (hasHollow || hasProfileCut))
                     faceNum++;
@@ -1016,7 +1019,7 @@ namespace PrimMesher
                     this.hollowFaceNumber = faceNum++;
                 }
 
-                this.bottomFaceNumber = faceNum++;
+                this.faceNumbers.Add(this.bottomFaceNumber = faceNum++);
 
                 if (hasHollow && hasProfileCut)
                     this.faceNumbers.Add(faceNum++);
